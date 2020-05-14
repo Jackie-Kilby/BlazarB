@@ -32,7 +32,8 @@ int main(void)
 	
 	//Init PortC-GPIO5(LED1-Blue) and PortC-GPIO0(LED2-Green) as output LOW
 	GPIOC_PDDR |= (1<<5) | (1<<0);
-	GPIOC_PDOR &= ~((1<<5) | (1<<0));
+	GPIOC_PDOR &= ~(1<<5);
+	GPIOC_PDOR |= (1<<0);
 
 	for(;;) {	   
 	   	counter++;
