@@ -26,18 +26,20 @@ int main(void)
 	//PortC Init
 	SIM_SCGC5 |= (1<<11);
 	
-	//Select MUX feature as GPIO for PortC-GPIO5(LED1-Blue)
+	//Select MUX feature as GPIO for PortC-GPIO5(LED1-Blue) and PortC-GPIO0(LED2-Green)
 	PORTC_PCR5 |= (1<<8);
+	PORTC_PCR0 |= (1<<8);
 	
-	//Init PortC-GPIO5(LED1-Blue) as output
-	GPIOC_PDDR |= (1<<5);
+	//Init PortC-GPIO5(LED1-Blue) and PortC-GPIO0(LED2-Green) as output LOW
+	GPIOC_PDDR |= (1<<5) | (1<<0);
+	GPIOC_PDOR &= ~((1<<5) | (1<<0));
 
 	for(;;) {	   
 	   	counter++;
 	   	delay();
 	   	
 	   	//Toggle PortC-GPIO5(LED1-Blue)
-	   	GPIOC_PTOR |= (1<<5);
+	   	GPIOC_PTOR |= (1<<5)|(1<<0);
 	}
 	
 	return 0;
