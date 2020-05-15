@@ -1,5 +1,5 @@
  # Repo for DVK Blarzar-β.
- - First project is LED blink, implemented by myself.
+ - Which files are needed to put in VCS(Version Control System): https://mcuoneclipse.com/2012/03/17/dissection-of-mcu10-projects/
  # User Guide
  1, Import this project into CodeWarrior; 
  2, Build;
