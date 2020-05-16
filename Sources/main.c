@@ -6,11 +6,13 @@
 #include "derivative.h" /* include peripheral declarations */
 
 #define JITTER_CNT	1
+#define PERIOD		100
 
-void delay(void) {
+
+void delay(int delay_time) {
 	unsigned short i, j;
-	for (i = 0; i < 3000; i++) {
-		for (j = 0; j < 200; j++) {
+	for (i = 0; i < 30; i++) {
+		for (j = 0; j < delay_time; j++) {
 //			asm{"nop"};
 		}
 	}
@@ -18,8 +20,7 @@ void delay(void) {
 
 int main(void) {
 	int counter = 0;
-	unsigned char mode = 1;
-	int jitterA = 0, jitterB = 0, jitterC = 0;
+	int on_time = 300;
 
 	//PortC Clock Gating
 	SIM_SCGC5 |= (1 << 11);
@@ -45,48 +46,74 @@ int main(void) {
 
 	for (;;) {
 		counter++;
-		//Select mode
-		if (!(GPIOA_PDIR & (1 << 19))) {
-			jitterC++;
-			if (jitterC == JITTER_CNT) {
-				mode = !mode;
-			}
-		} else if (jitterC) {
-			jitterC = 0;
+		//Breathing light
+		//Step 1
+		for (on_time=0 ; on_time<PERIOD ; on_time++) {
+			//on
+			GPIOC_PDOR |= (1<<5);
+			//delay++
+			delay(on_time);
+			//off
+			GPIOC_PDOR &= ~(1<<5);
+			//delay--
+			delay(PERIOD-on_time);
 		}
-
-		if (mode) {
-			//Mode-1
-			delay();
-			GPIOC_PTOR |= (1 << 5) | (1 << 0);
-		} else {
-			//Mode-2
-			//Button-A control PortC-GPIO5(LED1-Blue)
-			if (!(GPIOA_PDIR & (1 << 5))) {
-				jitterA++;
-				if (jitterA == JITTER_CNT) {
-					GPIOC_PDOR |= (1 << 5);
-				}
-			} else {
-				GPIOC_PDOR &= ~(1 << 5);
-				if (jitterA) {
-					jitterA = 0;
-				}
-			}
-			//Button-B control PortC-GPIO0(LED2-Green)
-			if (!(GPIOA_PDIR & (1 << 12))) {
-				jitterB ++;
-				if (jitterB == JITTER_CNT) {
-					GPIOC_PDOR |= (1 << 0);
-				}
-			} else {
-				GPIOC_PDOR &= ~(1 << 0);
-				if (jitterB) {
-					jitterB = 0;
-				}
-			}
+		for (on_time=0 ; on_time<PERIOD ; on_time++) {
+			//on
+			GPIOC_PDOR |= (1<<5);
+			//delay++
+			delay(PERIOD-on_time);
+			//off
+			GPIOC_PDOR &= ~(1<<5);
+			//delay--
+			delay(on_time);
 		}
+		GPIOC_PTOR |= (1<<0);
 	}
 
 	return 0;
+}
+
+//Blink with delay
+void led_blink_mode_1(void)					
+{
+	delay(200);
+	GPIOC_PTOR |= (1<<5) | (1<<0);
+}
+
+//Button press -> LED on.
+void led_blink_mode_2(void)
+{
+	static int jitterA = 0, jitterB = 0;
+	
+	//Button-A control PortC-GPIO5(LED1-Blue)
+	if (!(GPIOA_PDIR & (1 << 5))) {
+		jitterA++;
+		if (jitterA == JITTER_CNT) {
+			GPIOC_PDOR |= (1 << 5);
+		}
+	} else {
+		GPIOC_PDOR &= ~(1 << 5);
+		if (jitterA) {
+			jitterA = 0;
+		}
+	}
+	//Button-B control PortC-GPIO0(LED2-Green)
+	if (!(GPIOA_PDIR & (1 << 12))) {
+		jitterB ++;
+		if (jitterB == JITTER_CNT) {
+			GPIOC_PDOR |= (1 << 0);
+		}
+	} else {
+		GPIOC_PDOR &= ~(1 << 0);
+		if (jitterB) {
+			jitterB = 0;
+		}
+	}
+}
+
+//Breathing Blink
+void led_blink_mode_3(void)
+{
+	
 }
