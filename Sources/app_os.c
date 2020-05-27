@@ -1,17 +1,11 @@
 /*
-File name		: main.c
+File name		: app_os.c
 Developer		: Jack Kilby
-First Bread		: 2020-05-16
-Description		: The main entry of the project.
+Created on		: May 27, 2020
+Description		: 
 */
 
 /************************ Include Files ***********************************************/
-#include "app_led.h"
-#include "app_button.h"
-#include "app_os.h"
-
-#include "derivative.h" /* include peripheral declarations */
-#include <stdio.h>
 
 /************************ MACRO Definitions *******************************************/
 
@@ -25,28 +19,21 @@ Description		: The main entry of the project.
 
 /************************ Externed Functions Definitions ******************************/
 /*************************************************************************
-* Function Name		:	main
-* Description		:	The User Program Entry
-* Parameters		:	void
-* Returns			:	int
+* Function Name		:	delay
+* Description		:	Used to delay a period of time, occupying CPU.
+* Parameters		:	int	delay_cnt, the cnt of the period.
+* Returns			:	void
 *************************************************************************/
-int main(void) 
+void delay(int delay_cnt) 
 {
-	int button_st = 0;
-	
-	led_init();
-	button_init();
-	
-	for (;;) {
-		button_st = button_read();
-		if ( button_st & (1<<3))
-			led_blink_mode_breath_blink();
+	unsigned short i, j;
+	for (i = 0; i < 30; i++) {
+		for (j = 0; j < delay_cnt; j++) {
+			asm("nop");
+		}
 	}
-
-	return 0;
 }
 
 /************************ Static Functions Definitions *********************************/
 
 /* End of File*/
-

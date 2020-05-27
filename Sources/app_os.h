@@ -1,17 +1,12 @@
 /*
-File name		: main.c
+File name		: app_os.h
 Developer		: Jack Kilby
-First Bread		: 2020-05-16
-Description		: The main entry of the project.
+Created on		: May 27, 2020
+Description		: Some common APIs for the project.
 */
-
+#ifndef APP_OS_H_
+#define APP_OS_H_
 /************************ Include Files ***********************************************/
-#include "app_led.h"
-#include "app_button.h"
-#include "app_os.h"
-
-#include "derivative.h" /* include peripheral declarations */
-#include <stdio.h>
 
 /************************ MACRO Definitions *******************************************/
 
@@ -24,29 +19,9 @@ Description		: The main entry of the project.
 /************************ Static Functions Prototypes *********************************/
 
 /************************ Externed Functions Definitions ******************************/
-/*************************************************************************
-* Function Name		:	main
-* Description		:	The User Program Entry
-* Parameters		:	void
-* Returns			:	int
-*************************************************************************/
-int main(void) 
-{
-	int button_st = 0;
-	
-	led_init();
-	button_init();
-	
-	for (;;) {
-		button_st = button_read();
-		if ( button_st & (1<<3))
-			led_blink_mode_breath_blink();
-	}
-
-	return 0;
-}
+void delay(int delay_cnt);
 
 /************************ Static Functions Definitions *********************************/
 
+#endif /* APP_OS_H_ */
 /* End of File*/
-
