@@ -1,15 +1,12 @@
 /*
-File name		: main.c
+File name		: app_uart.h
 Developer		: Jack Kilby
-First Bread		: 2020-05-16
-Description		: The main entry of the project.
+Created on		: Jul 4, 2020
+Description		: Uart Func. Implement
 */
-
+#ifndef APP_UART_H_
+#define APP_UART_H_
 /************************ Include Files ***********************************************/
-#include "app_uart.h"
-
-#include "derivative.h" /* include peripheral declarations */
-#include <stdio.h>
 
 /************************ MACRO Definitions *******************************************/
 
@@ -21,25 +18,15 @@ Description		: The main entry of the project.
 
 /************************ Static Functions Prototypes *********************************/
 
-/************************ Externed Functions Definitions ******************************/
-/*************************************************************************
-* Function Name		:	main
-* Description		:	The User Program Entry
-* Parameters		:	void
-* Returns			:	int
-*************************************************************************/
-int main(void) 
-{
-	uart1_init();
-	
-	for (;;) {
-		uart1_putchar('D');
-	}
-
-	return 0;
-}
+/************************ Externed Functions Prototypes ******************************/
+void uart0_init(void);
+void uart1_init(void);
+void uart0_putchar(unsigned char data);
+void uart1_putchar(unsigned char data);
+unsigned char uart0_getchar(void);
+unsigned char uart1_getchar(void);
 
 /************************ Static Functions Definitions *********************************/
 
+#endif /* APP_UART_H_ */
 /* End of File*/
-
