@@ -40,7 +40,8 @@ void UART0_Init(void)
 {
 	//Enable UART0 clock
 	SIM_SOPT2 |= (1<<26);			//MCGFLLCLK clock, or MCGPLLCLK/2
-	SIM_SOPT2 &= ~(1<<16);			//MCGFLLCLK clock
+	SIM_SOPT2 &= ~(1<<16);			//MCGFLLCLK clock (21MHz)
+
 	SIM_SCGC4 |= (1<<10);			//Enable UART0 clock
 	SIM_SCGC5 |= (1<<9);			//Enable PortA clock
 	
@@ -50,8 +51,34 @@ void UART0_Init(void)
 	
 	//Init UART
 	UART0_BDH = 0x00;
-	UART0_BDL = 137;				//Set baud rate as 9600
+	UART0_BDL = 68;				//Set baud rate as 9600
 	UART0_C2 |= (UART_C2_TE_MASK | UART_C2_RE_MASK);			//Enable Tx
+}
+
+void UART1_Init(void)
+{
+	SIM_SCGC4 |= (1<<11);			//Enable UART1 clock
+	SIM_SCGC5 |= (1<<13);			//Enable PortE clock
+	
+	//Select UART1 IO
+	PORTE_PCR0 |= (3<<8);			//Select PortE-0 as UART1 Tx
+	PORTE_PCR1 |= (3<<8);			//Select PortE-1 as UART1 Rx
+	
+	UART1_BDH = 0x00;
+	UART1_BDL = 0x44;				//Set baud rate as 9600
+	UART1_C2 |= (UART_C2_TE_MASK | UART_C2_RE_MASK);			//Enable Tx
+}
+
+void UART1_PutChar(char c)
+{
+	while(!(UART1_S1 & UART_S1_TDRE_MASK));
+	UART1_D = c;
+}
+
+unsigned char UART1_GetChar(void)
+{
+	while(!(UART1_S1 & UART_S1_RDRF_MASK));
+	return UART1_D;
 }
 /*************************************************************************
 * Function Name		:	main
@@ -61,10 +88,10 @@ void UART0_Init(void)
 *************************************************************************/
 int main(void) 
 {
-	UART0_Init();
+	UART1_Init();
 	
 	for (;;) {
-		UART0_PutChar('D');
+		UART1_PutChar('D');
 	}
 
 	return 0;
