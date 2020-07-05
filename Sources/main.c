@@ -30,10 +30,15 @@ Description		: The main entry of the project.
 *************************************************************************/
 int main(void) 
 {
+	int i = 0;
 	uart1_init();
 	
-	for (;;) {
-		uart1_putchar('D');
+	for (i=0 ; i<128 ; i++) {
+		uart1_putchar(i);
+		if (i%16 == 0) {
+			uart1_putchar('\n');
+			uart1_putchar('\r');
+		}
 	}
 
 	return 0;
