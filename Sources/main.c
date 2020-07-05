@@ -30,15 +30,29 @@ Description		: The main entry of the project.
 *************************************************************************/
 int main(void) 
 {
-	int i = 0;
+	unsigned char data;
 	uart1_init();
 	
-	for (i=0 ; i<128 ; i++) {
-		uart1_putchar(i);
-		if (i%16 == 0) {
-			uart1_putchar('\n');
-			uart1_putchar('\r');
-		}
+	uart1_putchar('\t');
+	uart1_putchar('A');
+	uart1_putchar('S');
+	uart1_putchar('C');
+	uart1_putchar('I');
+	uart1_putchar('I');
+	uart1_putchar(' ');
+	uart1_putchar('S');
+	uart1_putchar('e');
+	uart1_putchar('a');
+	uart1_putchar('r');
+	uart1_putchar('c');
+	uart1_putchar('h');
+
+	uart1_putchar('\r');
+	uart1_putchar('\n');
+	
+	for (;;) {
+		data = uart1_getchar();
+		char_to_ascii_table(data);
 	}
 
 	return 0;

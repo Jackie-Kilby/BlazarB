@@ -26,6 +26,9 @@ void uart1_putchar(unsigned char data);
 unsigned char uart0_getchar(void);
 unsigned char uart1_getchar(void);
 
+void char_to_decimal(unsigned char data);
+void char_to_hex(unsigned char data);
+void char_to_ascii_table(unsigned char data);
 /************************ Static Functions Definitions *********************************/
 
 #endif /* APP_UART_H_ */

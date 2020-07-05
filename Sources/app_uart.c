@@ -17,6 +17,7 @@ Description		:
 /************************ Static Varibles *********************************************/
 
 /************************ Static Functions Prototypes *********************************/
+static inline unsigned char dtoa(unsigned int data);
 
 /************************ Externed Functions Definitions ******************************/
 /*************************************************************************
@@ -102,7 +103,7 @@ void uart1_putchar(unsigned char data)
 
 /*************************************************************************
 * Function Name		:	uart1_getchar
-* Description		:	Get a char from UART1 data register when Receive data register full (Block method) 
+* Description		:	Get a char from UART1 data register when Receive data register full (Block method) .
 * Parameters		:	void
 * Returns			:	unsigned char, the data got
 *************************************************************************/
@@ -112,6 +113,63 @@ unsigned char uart1_getchar(void)
 	return UART1_D;
 }
 
+/*************************************************************************
+* Function Name		:	char_to_decimal
+* Description		:	Change input char to ASCII output in decimal and print it out.
+* Parameters		:	unsigned char, the input char
+* Returns			:	void
+*************************************************************************/
+void char_to_decimal(unsigned char data)
+{
+	uart1_putchar(data/100+'0');
+	uart1_putchar(data%100/10+'0');
+	uart1_putchar(data%10+'0');
+}
+
+/*************************************************************************
+* Function Name		:	char_to_hex
+* Description		:	Change input char to ASCII output in hex and print it out.
+* Parameters		:	unsigned char, the input char
+* Returns			:	void
+*************************************************************************/
+void char_to_hex(unsigned char data)
+{
+	uart1_putchar(dtoa((data&0xF0)>>4));
+	uart1_putchar(dtoa(data&0x0F));
+}
+
+/*************************************************************************
+* Function Name		:	char_to_ascii_table
+* Description		:	Change input char to ASCII output in hex and decimal and print it out as table.
+* Parameters		:	unsigned char, the input char
+* Returns			:	void
+*************************************************************************/
+void char_to_ascii_table(unsigned char data)
+{
+	uart1_putchar(data);
+	uart1_putchar('\t');
+	
+	uart1_putchar('0');
+	uart1_putchar('x');
+	char_to_hex(data);
+
+	uart1_putchar('\t');
+	char_to_decimal(data);
+	
+	uart1_putchar('\r');
+	uart1_putchar('\n');
+}
+
 /************************ Static Functions Definitions *********************************/
+/*************************************************************************
+* Function Name		:	dtoa
+* Description		:	Decimal number to ASCII in hex.
+* Parameters		:	unsigned int, the input dicimal number
+* Returns			:	unsigned char, the hex output in ASCII char
+*************************************************************************/
+static inline unsigned char dtoa(unsigned int data)
+{
+	return data<10 ? data+'0' : data+'A'-10;
+}
 
 /* End of File*/
