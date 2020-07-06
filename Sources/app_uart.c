@@ -114,6 +114,20 @@ unsigned char uart1_getchar(void)
 }
 
 /*************************************************************************
+* Function Name		:	uart1_putstring
+* Description		:	Print string out.
+* Parameters		:	char *, the string to be printed out.
+* Returns			:	void
+*************************************************************************/
+void uart1_putstring(char * str)
+{
+	while(*str != 0) {
+		uart1_putchar(*str);
+		str++;
+	}
+}
+
+/*************************************************************************
 * Function Name		:	char_to_decimal
 * Description		:	Change input char to ASCII output in decimal and print it out.
 * Parameters		:	unsigned char, the input char

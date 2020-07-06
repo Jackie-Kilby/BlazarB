@@ -6,7 +6,9 @@ Description		: The main entry of the project.
 */
 
 /************************ Include Files ***********************************************/
-#include "app_uart.h"
+#include "app_button.h"
+#include "app_led.h"
+#include "app_os.h"
 
 #include "derivative.h" /* include peripheral declarations */
 #include <stdio.h>
@@ -19,18 +21,42 @@ Description		: The main entry of the project.
 /************************ Externed Varibles *******************************************/
 
 /************************ Static Varibles *********************************************/
+static int bMode = 0;
 
 /************************ Static Functions Prototypes *********************************/
 
 /************************ Externed Functions Definitions ******************************/
-void uart1_putstring(char * str)
+void PORTA_IRQHandler(void)
 {
-	while(*str != 0) {
-		uart1_putchar(*str);
-		str++;
+	if (!(GPIOA_PDIR & (1<<5))) {
+		bMode = ~bMode;
+		if (bMode) {
+			GPIOB_PDOR &= ~(1<<18);
+			GPIOC_PDOR &= ~(1<<2);
+		} else {
+			GPIOB_PDOR &= ~(1<<18);
+			GPIOC_PDOR |= (1<<2);
+		}
 	}
+	PORTA_PCR5 |= (1<<24);		//Clear Interrupt
 }
 
+void global_interrupt_enable(void)
+{
+	asm("CPSIE i");
+}
+
+void global_interrupt_disable(void)
+{
+	asm("CPSID i");
+}
+
+void gpioA5_interrupt_enable(void)
+{
+	NVIC_ISER |= (1<<30);		//Enable PortA GPIO Interrupt
+	PORTA_PCR5 |= (10<<16);		//Interrupt on falling-edge
+	PORTA_PCR5 |= (1<<24);		//Clear Interrupt
+}
 
 /*************************************************************************
 * Function Name		:	main
@@ -40,42 +66,15 @@ void uart1_putstring(char * str)
 *************************************************************************/
 int main(void) 
 {
-	unsigned int answer = 3;
-	unsigned char data = 0;
-	int gnum = 0;
-	int r = 0;
-	uart1_init();
-	uart1_putstring("Press any key to start.\r\n");
+	led_init();
+	button_init();
+	global_interrupt_enable();
+	gpioA5_interrupt_enable();
+
 	for (;;) {
-		
-		while(!(UART1_S1 & UART_S1_RDRF_MASK)) r++;
-		answer = r%10;
-		uart1_putchar(' ');
-		uart1_putchar(answer+'0');
-		uart1_putchar('\r');
-		uart1_putchar('\n');
-		
-		while(1) {
-			
-			uart1_putstring("Guess number:");
-			data = uart1_getchar();
-			uart1_putchar(data);
-			if (answer == (data-'0')) {
-				uart1_putstring(" Bingo!\r\n");
-				break;
-			} else {
-				uart1_putstring(" is ");
-				if (data-'0' > answer) {
-					uart1_putstring("more.\r\n");
-				} else {
-					uart1_putstring("less.\r\n");
-				}
-			}
-			gnum++;
-		} 
-		uart1_putstring("You have guessed for ");
-		uart1_putchar(gnum+'0');
-		uart1_putstring(" times.\r\nTry again, press any key to start.\r\n");
+		delay(10000);
+		GPIOC_PTOR |= (1<<2);
+		GPIOB_PTOR |= (1<<18);
 	}
 
 	return 0;
