@@ -34,6 +34,28 @@ void delay(int delay_cnt)
 	}
 }
 
+/*************************************************************************
+* Function Name		:	global_interrupt_enable
+* Description		:	Enable global interrupt.
+* Parameters		:	void
+* Returns			:	void
+*************************************************************************/
+void global_interrupt_enable(void)
+{
+	asm("CPSIE i");
+}
+
+/*************************************************************************
+* Function Name		:	global_interrupt_disable
+* Description		:	Disable global interrupt.
+* Parameters		:	void
+* Returns			:	void
+*************************************************************************/
+void global_interrupt_disable(void)
+{
+	asm("CPSID i");
+}
+
 /************************ Static Functions Definitions *********************************/
 
 /* End of File*/

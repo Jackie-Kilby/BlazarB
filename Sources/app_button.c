@@ -88,6 +88,20 @@ int button_read(void)
 	
 	return button_ret;
 }
+
+/*************************************************************************
+* Function Name		:	gpio_interrupt_enable
+* Description		:	An example code of gpio(PA5) interrupt config
+* Parameters		:	void
+* Returns			:	void
+*************************************************************************/
+void gpio_interrupt_enable(void)
+{
+	NVIC_ISER |= (1<<30);		//Enable PortA GPIO Interrupt
+	PORTA_PCR5 |= (10<<16);		//Interrupt on falling-edge
+	PORTA_PCR5 |= (1<<24);		//Clear Interrupt
+}
+
 /************************ Static Functions Definitions *********************************/
 
 /* End of File*/

@@ -6,13 +6,7 @@ Description		: The main entry of the project.
 */
 
 /************************ Include Files ***********************************************/
-#include "app_button.h"
-#include "app_led.h"
-#include "app_os.h"
-
 #include "derivative.h" /* include peripheral declarations */
-#include <stdio.h>
-#include <stdlib.h>		//For rand func.
 
 /************************ MACRO Definitions *******************************************/
 
@@ -21,43 +15,21 @@ Description		: The main entry of the project.
 /************************ Externed Varibles *******************************************/
 
 /************************ Static Varibles *********************************************/
-static int bMode = 0;
+static volatile int count = 0;
+static volatile int irq_need_handle = 0;
 
 /************************ Static Functions Prototypes *********************************/
 
 /************************ Externed Functions Definitions ******************************/
-void PORTA_IRQHandler(void)
+void SysTick_Handler(void)
 {
-	if (!(GPIOA_PDIR & (1<<5))) {
-		bMode = ~bMode;
-		if (bMode) {
-			GPIOB_PDOR &= ~(1<<18);
-			GPIOC_PDOR &= ~(1<<2);
-		} else {
-			GPIOB_PDOR &= ~(1<<18);
-			GPIOC_PDOR |= (1<<2);
-		}
-	}
-	PORTA_PCR5 |= (1<<24);		//Clear Interrupt
+	unsigned int i;
+	
+	count++;
+	irq_need_handle = 1;
+	
+	i = SYST_CSR;		//Clear Interrupt flag
 }
-
-void global_interrupt_enable(void)
-{
-	asm("CPSIE i");
-}
-
-void global_interrupt_disable(void)
-{
-	asm("CPSID i");
-}
-
-void gpioA5_interrupt_enable(void)
-{
-	NVIC_ISER |= (1<<30);		//Enable PortA GPIO Interrupt
-	PORTA_PCR5 |= (10<<16);		//Interrupt on falling-edge
-	PORTA_PCR5 |= (1<<24);		//Clear Interrupt
-}
-
 /*************************************************************************
 * Function Name		:	main
 * Description		:	The User Program Entry
@@ -66,15 +38,31 @@ void gpioA5_interrupt_enable(void)
 *************************************************************************/
 int main(void) 
 {
-	led_init();
-	button_init();
-	global_interrupt_enable();
-	gpioA5_interrupt_enable();
-
+	//LED PortC-4 Init
+	SIM_SCGC5 |= (1<<10);		//Enable PortB Clock
+	PORTB_PCR17 |= 0x100;
+	GPIOB_PDDR |= (1<<17);
+	GPIOB_PDOR &= ~(1<<17);
+	
+	asm("CPSIE i");
+	SYST_RVR = 0x9FFD07;
+	SYST_CVR = 0x00;
+	SYST_CSR |= (1<<0) | (1<<1) | (1<<2);
+	
+	int led_status = 0;
 	for (;;) {
-		delay(10000);
-		GPIOC_PTOR |= (1<<2);
-		GPIOB_PTOR |= (1<<18);
+		if (!(count%4) && irq_need_handle) {
+			irq_need_handle = 0;
+			if (led_status) {
+//				GPIOB_PCOR |= (1<<17);
+				GPIOB_PDOR &= ~(1<<17);
+				led_status = 0;
+			} else {
+//				GPIOB_PSOR |= (1<<17);
+				GPIOB_PDOR |= (1<<17);
+				led_status = 1;
+			}
+		}
 	}
 
 	return 0;
