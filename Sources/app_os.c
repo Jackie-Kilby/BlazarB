@@ -6,6 +6,7 @@ Description		:
 */
 
 /************************ Include Files ***********************************************/
+#include "derivative.h"
 
 /************************ MACRO Definitions *******************************************/
 
@@ -54,6 +55,32 @@ void global_interrupt_enable(void)
 void global_interrupt_disable(void)
 {
 	asm("CPSID i");
+}
+
+/*************************************************************************
+* Function Name		:	SysTick_Handler 
+* Description		:	SysTick Handler
+* Parameters		:	void
+* Returns			:	void
+*************************************************************************/
+void SysTick_Handler(void)
+{
+	unsigned int i;
+	(void)i;			//Solve the warning "set but not used"
+	
+	//User Code
+	static int led_status = 0;
+	
+	if (led_status) {
+		GPIOC_PCOR |= (1<<4);
+		led_status = 0;
+	} else {
+		GPIOC_PSOR |= (1<<4);
+		led_status = 1;
+	}
+	
+	//Clear Interrupt flag
+	i = SYST_CSR;		
 }
 
 /************************ Static Functions Definitions *********************************/
