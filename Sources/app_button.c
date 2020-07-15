@@ -89,6 +89,7 @@ int button_read(void)
 	return button_ret;
 }
 
+#if EXAMPLE_CODE
 /*************************************************************************
 * Function Name		:	gpio_interrupt_enable
 * Description		:	An example code of gpio(PA5) interrupt config
@@ -101,6 +102,7 @@ void gpio_interrupt_enable(void)
 	PORTA_PCR5 |= (10<<16);		//Interrupt on falling-edge
 	PORTA_PCR5 |= (1<<24);		//Clear Interrupt
 }
+#endif
 
 /************************ Static Functions Definitions *********************************/
 

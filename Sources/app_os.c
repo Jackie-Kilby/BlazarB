@@ -57,9 +57,10 @@ void global_interrupt_disable(void)
 	asm("CPSID i");
 }
 
+#if EXAMPLE_CODE
 /*************************************************************************
 * Function Name		:	SysTick_Handler 
-* Description		:	SysTick Handler
+* Description		:	An example code of SysTick_Handler
 * Parameters		:	void
 * Returns			:	void
 *************************************************************************/
@@ -82,6 +83,7 @@ void SysTick_Handler(void)
 	//Clear Interrupt flag
 	i = SYST_CSR;		
 }
+#endif
 
 /************************ Static Functions Definitions *********************************/
 
