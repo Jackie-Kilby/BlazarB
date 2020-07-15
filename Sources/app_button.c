@@ -102,6 +102,20 @@ void gpio_interrupt_enable(void)
 	PORTA_PCR5 |= (10<<16);		//Interrupt on falling-edge
 	PORTA_PCR5 |= (1<<24);		//Clear Interrupt
 }
+
+/*************************************************************************
+* Function Name		:	PORTA_IRQHandler
+* Description		:	An example code of PORTA_IRQHandler
+* Parameters		:	void
+* Returns			:	void
+*************************************************************************/
+void PORTA_IRQHandler(void)
+{
+	//User Code
+	
+
+	PORTA_PCR5 |= (1<<24);		//Clear Interrupt
+}
 #endif
 
 /************************ Static Functions Definitions *********************************/
