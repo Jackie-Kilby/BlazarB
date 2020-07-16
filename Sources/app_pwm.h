@@ -1,13 +1,12 @@
 /*
-File name		: main.c
+File name		: app_pwm.h
 Developer		: Jack Kilby
-First Bread		: 2020-05-16
-Description		: The main entry of the project.
+Created on		: Jul 16, 2020
+Description		: 
 */
-
+#ifndef APP_PWM_H_
+#define APP_PWM_H_
 /************************ Include Files ***********************************************/
-#include "derivative.h" /* include peripheral declarations */
-#include "app_pwm.h"
 
 /************************ MACRO Definitions *******************************************/
 
@@ -19,25 +18,10 @@ Description		: The main entry of the project.
 
 /************************ Static Functions Prototypes *********************************/
 
-/************************ Externed Functions Definitions ******************************/
-/*************************************************************************
-* Function Name		:	main
-* Description		:	The User Program Entry
-* Parameters		:	void
-* Returns			:	int
-*************************************************************************/
-int main(void) 
-{
-	pwm_init();
-	
-	for (;;) {
-
-	}
-
-	return 0;
-}
+/************************ Externed Functions Prototypes ******************************/
+void pwm_init(void);
 
 /************************ Static Functions Definitions *********************************/
 
+#endif /* APP_PWM_H_ */
 /* End of File*/
-
