@@ -1,11 +1,11 @@
 /*
-File name		: app_uart.h
+File name		: app_adc.h
 Developer		: Jack Kilby
-Created on		: Jul 4, 2020
-Description		: Uart Func. Implement
+Created on		: Jan 5, 2021
+Description		: 
 */
-#ifndef APP_UART_H_
-#define APP_UART_H_
+#ifndef APP_ADC_H_
+#define APP_ADC_H_
 /************************ Include Files ***********************************************/
 
 /************************ MACRO Definitions *******************************************/
@@ -19,18 +19,10 @@ Description		: Uart Func. Implement
 /************************ Static Functions Prototypes *********************************/
 
 /************************ Externed Functions Prototypes ******************************/
-void uart0_init(void);
-void uart1_init(void);
-void uart0_putchar(unsigned char data);
-void uart1_putchar(unsigned char data);
-unsigned char uart0_getchar(void);
-unsigned char uart1_getchar(void);
-void uart0_putstring(char * str);
+void adc_init(void);
+int adc_read(void);
 
-void char_to_decimal(unsigned char data);
-void char_to_hex(unsigned char data);
-void char_to_ascii_table(unsigned char data);
 /************************ Static Functions Definitions *********************************/
 
-#endif /* APP_UART_H_ */
+#endif /* APP_ADC_H_ */
 /* End of File*/

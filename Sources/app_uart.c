@@ -90,6 +90,20 @@ unsigned char uart0_getchar(void)
 }
 
 /*************************************************************************
+* Function Name		:	uart0_putstring
+* Description		:	Print string out.
+* Parameters		:	char *, the string to be printed out.
+* Returns			:	void
+*************************************************************************/
+void uart0_putstring(char * str)
+{
+	while(*str != 0) {
+		uart0_putchar(*str);
+		str++;
+	}
+}
+
+/*************************************************************************
 * Function Name		:	uart1_putchar
 * Description		:	Send a char to UART1 data register when Transmit data register empty (Block method) 
 * Parameters		:	unsigned char data, the char going to be sent
@@ -142,14 +156,14 @@ void char_to_decimal(unsigned char data)
 
 /*************************************************************************
 * Function Name		:	char_to_hex
-* Description		:	Change input char to ASCII output in hex and print it out.
+* Description		:	Change input char to ASCII output in hex and print it out. //TODO: Use uart0 temply, choose one then.
 * Parameters		:	unsigned char, the input char
 * Returns			:	void
 *************************************************************************/
 void char_to_hex(unsigned char data)
 {
-	uart1_putchar(dtoa((data&0xF0)>>4));
-	uart1_putchar(dtoa(data&0x0F));
+	uart0_putchar(dtoa((data&0xF0)>>4));
+	uart0_putchar(dtoa(data&0x0F));
 }
 
 /*************************************************************************

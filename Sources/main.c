@@ -7,7 +7,9 @@ Description		: The main entry of the project.
 
 /************************ Include Files ***********************************************/
 #include "derivative.h" /* include peripheral declarations */
-#include "app_pwm.h"
+#include "app_uart.h"
+#include "app_os.h"
+#include "app_adc.h"
 
 /************************ MACRO Definitions *******************************************/
 
@@ -28,10 +30,15 @@ Description		: The main entry of the project.
 *************************************************************************/
 int main(void) 
 {
-	pwm_init();
+	adc_init();
+	uart0_init();
 	
 	for (;;) {
-
+		//Print out the value ADC get
+		char_to_hex(adc_read());
+		uart0_putstring("\r\n");
+		//Delay
+		delay(10000);
 	}
 
 	return 0;
